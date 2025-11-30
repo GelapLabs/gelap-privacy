@@ -5,7 +5,7 @@ import * as motion from "motion/react-client";
 import { AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { ArrowUpRight, LucideIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/src/lib/utils";
 import { useTransfer } from "@/src/contexts/TransferContext";
 
 interface NavItem {

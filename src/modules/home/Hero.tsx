@@ -28,7 +28,7 @@ export default function Hero() {
           <div className="inline-block relative">
             <button
               onClick={handleExpand}
-              className="h-15 px-6 sm:px-8 rounded-full bg-[#fa6c01] hover:bg-[#fa6c01]/90 hover:shadow-lg font-semibold hover:shadow-white cursor-pointer transition-all duration-300 py-3 text-lg sm:text-xl font-regular text-[#E3E3E3] tracking-[-0.01em] relative"
+              className="h-15 px-6 sm:px-8 rounded-full bg-[#fa6c01] hover:bg-[#fa6c01]/90 hover:shadow-lg font-semibold hover:shadow-white cursor-pointer transition-all duration-300 py-3 text-lg sm:text-xl font-regular text-[#E3E3E3] hover:text-[#FFFFFF] tracking-[-0.01em] relative"
             >
               Transfer Now <ArrowUpRight className="inline-block" />
             </button>
