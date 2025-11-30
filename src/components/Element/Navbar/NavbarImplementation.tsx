@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import * as motion from "motion/react-client";
 import { AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { LucideIcon } from "lucide-react";
+import { ArrowUpRight, LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTransfer } from "@/src/contexts/TransferContext";
 
@@ -53,11 +53,11 @@ export function NavBar({ items, className }: NavBarProps) {
   return (
     <div
       className={cn(
-        "fixed sm:top-0 left-1/2 -translate-x-1/2 z-50 sm:pt-6",
+        "fixed sm:top-0 bottom-0 pb-4 left-1/2 -translate-x-1/2 z-50 sm:pt-6",
         className
       )}
     >
-      <div className="flex items-center gap-3 bg-background/5 border border-border backdrop-blur-lg py-1 px-1 rounded-full shadow-lg transition-all duration-300">
+      <div className="flex w-fit items-center gap-3 bg-background/5 border border-border backdrop-blur-lg py-1 px-1 rounded-full shadow-lg transition-all duration-300">
         {items.map((item) => {
           const Icon = item.icon;
           const isActive = activeTab === item.name;
@@ -68,14 +68,14 @@ export function NavBar({ items, className }: NavBarProps) {
               href={item.url}
               onClick={() => setActiveTab(item.name)}
               className={cn(
-                "relative cursor-pointer text-sm font-semibold px-6 py-2 rounded-full transition-colors",
+                "relative cursor-pointer text-sm font-semibold sm:px-6 sm:py-2 py-3 px-4 rounded-full transition-colors",
                 "text-foreground/80 hover:text-white",
                 isActive && "bg-muted text-black hover:text-black/50"
               )}
             >
               <span className="hidden md:inline">{item.name}</span>
               <span className="md:hidden">
-                <Icon size={18} strokeWidth={2.5} />
+                <Icon size={20} strokeWidth={2.5} />
               </span>
               {isActive && (
                 <motion.div
@@ -101,6 +101,11 @@ export function NavBar({ items, className }: NavBarProps) {
 
         <AnimatePresence mode="wait">
           {showTransferButton && (
+            // <span className="hidden md:inline">{item.name}</span>
+            //   <span className="md:hidden">
+            //     <Icon size={18} strokeWidth={2.5} />
+            //   </span>
+
             <motion.button
               initial={{ opacity: 0, scale: 0.8, x: -10 }}
               animate={{ opacity: 1, scale: 1, x: 0 }}
@@ -112,7 +117,10 @@ export function NavBar({ items, className }: NavBarProps) {
               onClick={handleOpenTransfer}
               className="relative px-6 py-2 rounded-full font-semibold text-sm bg-orange-500 text-white hover:bg-orange-600 transition-colors shadow-lg"
             >
-              Transfer Now
+              <span className="hidden md:inline">Transfer</span>
+              <span className="md:hidden">
+                <ArrowUpRight size={18} strokeWidth={2.5} />
+              </span>
               <div className="absolute inset-0 bg-orange-400/20 rounded-full blur-md -z-10" />
             </motion.button>
           )}
