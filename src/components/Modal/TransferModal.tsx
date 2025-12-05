@@ -9,6 +9,7 @@ import { useTransfer } from "@/src/contexts/TransferContext";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useAccount, useBalance } from "wagmi";
 import { formatUnits, parseUnits } from "viem";
+import Image from "next/image";
 
 export function TransferModal() {
   const { isExpanded, closeTransfer } = useTransfer();
@@ -105,7 +106,7 @@ export function TransferModal() {
                 borderRadius: "24px",
                 transformOrigin: "top center",
               }}
-              className="relative flex h-full w-full overflow-y-auto bg-[#fa6c01] transform-gpu will-change-transform pointer-events-auto"
+              className="relative flex h-full w-full overflow-y-auto bg-gradient-to-br from-primary via-primary-700 to-secondary transform-gpu will-change-transform pointer-events-auto"
             >
               <motion.div
                 initial={{ opacity: 0 }}
@@ -119,7 +120,7 @@ export function TransferModal() {
               >
                 <MeshGradient
                   speed={1}
-                  colors={["#fa6c01", "#c55501", "#e86201", "#d25801"]}
+                  colors={["#6A1E55", "#3B1C32", "#A64D79", "#d9499e"]}
                   distortion={0.8}
                   swirl={0.1}
                   grainMixer={0}
@@ -132,7 +133,7 @@ export function TransferModal() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.1, duration: 0.3 }}
-                className="relative z-10 flex flex-col w-full mx-auto items-center p-6 sm:p-10 max-w-md gap-6"
+                className="relative z-10 flex flex-col w-full mx-auto items-center p-6 sm:p-10 max-w-lg gap-6"
               >
                 {/* Header */}
                 <div className="w-full flex items-center justify-between">
@@ -149,7 +150,7 @@ export function TransferModal() {
                       onClick={() => setActiveTab("transfer")}
                       className={`flex-1 px-6 py-3 rounded-full font-semibold transition-all ${
                         activeTab === "transfer"
-                          ? "bg-white text-[#fa6c01]"
+                          ? "bg-white text-primary"
                           : "text-white hover:bg-white/10"
                       }`}
                     >
@@ -160,7 +161,7 @@ export function TransferModal() {
                       onClick={() => setActiveTab("redeem")}
                       className={`flex-1 px-6 py-3 rounded-full font-semibold transition-all ${
                         activeTab === "redeem"
-                          ? "bg-white text-[#fa6c01]"
+                          ? "bg-white text-primary"
                           : "text-white hover:bg-white/10"
                       }`}
                     >
@@ -245,7 +246,7 @@ export function TransferModal() {
                             }
 
                             return (
-                              <div className="flex gap-3">
+                              <div className="flex max-md:flex-col gap-3">
                                 <button
                                   onClick={openChainModal}
                                   type="button"
@@ -262,6 +263,7 @@ export function TransferModal() {
                                       }}
                                     >
                                       {chain.iconUrl && (
+                                        // eslint-disable-next-line @next/next/no-img-element
                                         <img
                                           alt={chain.name ?? "Chain icon"}
                                           src={chain.iconUrl}
@@ -389,8 +391,8 @@ export function TransferModal() {
                     }
                     className={`group relative flex w-full items-center justify-center gap-2 rounded-full py-4 text-lg font-bold transition-all ${
                       status === "success"
-                        ? "bg-green-500 text-white"
-                        : "bg-white text-[#fa6c01] hover:bg-white/90 hover:shadow-lg hover:shadow-white/20"
+                        ? "bg-success text-white"
+                        : "bg-white text-primary hover:bg-white/90 hover:shadow-glow"
                     } disabled:cursor-not-allowed disabled:opacity-50`}
                   >
                     <AnimatePresence mode="wait">
@@ -447,7 +449,7 @@ export function TransferModal() {
                     <motion.div
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="text-center text-sm text-green-300 font-medium"
+                      className="text-center text-sm text-success-light font-medium"
                     >
                       ✓{" "}
                       {activeTab === "transfer"
@@ -459,7 +461,7 @@ export function TransferModal() {
                   {/* Privacy Notice */}
                   <div className="pt-4 border-t border-white/10">
                     <div className="flex items-start gap-3">
-                      <ShieldCheck className="h-5 w-5 text-green-400 shrink-0 mt-0.5" />
+                      <ShieldCheck className="h-5 w-5 text-success-light shrink-0 mt-0.5" />
                       <div>
                         <p className="text-sm text-white/90 font-medium mb-1">
                           Hidden Layer Protection Active

@@ -59,7 +59,7 @@ class CardStreamController {
 
   calculateDimensions() {
     this.containerWidth = this.container.offsetWidth;
-    const cardWidth = 400;
+    const cardWidth = 300;
     const cardGap = 60;
     const cardCount = this.cardLine.children.length;
     this.cardLineWidth = (cardWidth + cardGap) * cardCount;
@@ -302,10 +302,14 @@ class CardStreamController {
     normalCard.className = "card card-normal";
 
     const cardImages = [
-      "/cards/v0card1.png",
-      "/cards/v0card2.png",
-      "/cards/v0card3.png",
-      "/cards/v0card4.png",
+      // "/cards/v0card1.png",
+      // "/cards/v0card2.png",
+      // "/cards/v0card3.png",
+      // "/cards/v0card4.png",
+      "/logo/bitcoin.png",
+      "/logo/etherium.png",
+      "/logo/mantle.png",
+      "/logo/usdc.png",
     ];
 
     const cardImage = document.createElement("img");
@@ -315,17 +319,17 @@ class CardStreamController {
 
     cardImage.onerror = () => {
       const canvas = document.createElement("canvas");
-      canvas.width = 400;
-      canvas.height = 250;
+      canvas.width = 300;
+      canvas.height = 300;
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
-      const gradient = ctx.createLinearGradient(0, 0, 400, 250);
+      const gradient = ctx.createLinearGradient(0, 0, 300, 300);
       gradient.addColorStop(0, "#667eea");
       gradient.addColorStop(1, "#764ba2");
 
       ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, 400, 250);
+      ctx.fillRect(0, 0, 300, 300);
 
       cardImage.src = canvas.toDataURL();
     };
@@ -339,7 +343,7 @@ class CardStreamController {
     asciiContent.className = "ascii-content";
 
     const { width, height, fontSize, lineHeight } =
-      this.calculateCodeDimensions(400, 250);
+      this.calculateCodeDimensions(300, 300);
     asciiContent.style.fontSize = fontSize + "px";
     asciiContent.style.lineHeight = lineHeight + "px";
     asciiContent.textContent = this.generateCode(width, height);
@@ -412,7 +416,7 @@ class CardStreamController {
   updateAsciiContent() {
     document.querySelectorAll(".ascii-content").forEach((content) => {
       if (Math.random() < 0.15) {
-        const { width, height } = this.calculateCodeDimensions(400, 250);
+        const { width, height } = this.calculateCodeDimensions(300, 300);
         content.textContent = this.generateCode(width, height);
       }
     });
@@ -456,8 +460,8 @@ class ParticleSystem {
     this.camera = new THREE.OrthographicCamera(
       -window.innerWidth / 2,
       window.innerWidth / 2,
-      125,
-      -125,
+      150,
+      -150,
       1,
       1000
     );
@@ -467,7 +471,7 @@ class ParticleSystem {
       alpha: true,
       antialias: true,
     });
-    this.renderer.setSize(window.innerWidth, 250);
+    this.renderer.setSize(window.innerWidth, 300);
     this.renderer.setClearColor(0x000000, 0);
     this.particles = null;
     this.particleCount = 400;
@@ -511,7 +515,7 @@ class ParticleSystem {
 
     for (let i = 0; i < this.particleCount; i++) {
       positions[i * 3] = (Math.random() - 0.5) * window.innerWidth * 2;
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 250;
+      positions[i * 3 + 1] = (Math.random() - 0.5) * 300;
       positions[i * 3 + 2] = 0;
 
       colors[i * 3] = 1;
@@ -590,7 +594,7 @@ class ParticleSystem {
 
         if (positions[i * 3] > window.innerWidth / 2 + 100) {
           positions[i * 3] = -window.innerWidth / 2 - 100;
-          positions[i * 3 + 1] = (Math.random() - 0.5) * 250;
+          positions[i * 3 + 1] = (Math.random() - 0.5) * 300;
         }
 
         positions[i * 3 + 1] += Math.sin(time + i * 0.1) * 0.5;
@@ -617,7 +621,7 @@ class ParticleSystem {
     this.camera.right = window.innerWidth / 2;
     this.camera.updateProjectionMatrix();
 
-    this.renderer.setSize(window.innerWidth, 250);
+    this.renderer.setSize(window.innerWidth, 300);
   }
 
   destroy() {
@@ -832,8 +836,8 @@ class ParticleScanner {
   }
 
   drawLightBar() {
-    const cardHeight = 250;
-    const idleHeight = cardHeight * 0.8;
+    const cardHeight = 300;
+    const idleHeight = cardHeight * 1.0; // 100% untuk memenuhi lingkaran penuh
     const currentHeight = this.scanningActive ? cardHeight : idleHeight;
     const drawY = (this.h - currentHeight) / 2;
     const currentFadeZone = this.scanningActive ? 5 : this.fadeZone;
@@ -1183,8 +1187,8 @@ export function CardScanner() {
 
         .card-wrapper {
           position: relative;
-          width: 400px;
-          height: 250px;
+          width: 300px;
+          height: 300px;
           flex-shrink: 0;
         }
 
@@ -1192,9 +1196,9 @@ export function CardScanner() {
           position: absolute;
           top: 0;
           left: 0;
-          width: 400px;
-          height: 250px;
-          border-radius: 15px;
+          width: 300px;
+          height: 300px;
+          border-radius: 50%;
           overflow: hidden;
         }
 
@@ -1209,14 +1213,25 @@ export function CardScanner() {
           z-index: 2;
           position: relative;
           overflow: hidden;
-          clip-path: inset(0 0 0 var(--clip-right, 0%));
+          -webkit-mask-image: linear-gradient(
+            to right,
+            rgba(0, 0, 0, 1) 0%,
+            rgba(0, 0, 0, 1) var(--clip-right, 0%),
+            rgba(0, 0, 0, 0) var(--clip-right, 0%)
+          );
+          mask-image: linear-gradient(
+            to right,
+            rgba(0, 0, 0, 1) 0%,
+            rgba(0, 0, 0, 1) var(--clip-right, 0%),
+            rgba(0, 0, 0, 0) var(--clip-right, 0%)
+          );
         }
 
         .card-image {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          border-radius: 15px;
+          border-radius: 50%;
           transition: all 0.3s ease;
           filter: brightness(1.1) contrast(1.1);
           box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.1);
@@ -1232,11 +1247,22 @@ export function CardScanner() {
           position: absolute;
           top: 0;
           left: 0;
-          width: 400px;
-          height: 250px;
-          border-radius: 15px;
+          width: 300px;
+          height: 300px;
+          border-radius: 50%;
           overflow: hidden;
-          clip-path: inset(0 calc(100% - var(--clip-left, 0%)) 0 0);
+          -webkit-mask-image: linear-gradient(
+            to right,
+            rgba(0, 0, 0, 0) 0%,
+            rgba(0, 0, 0, 0) calc(var(--clip-left, 0%) - 100%),
+            rgba(0, 0, 0, 1) calc(var(--clip-left, 0%) - 100%)
+          );
+          mask-image: linear-gradient(
+            to right,
+            rgba(0, 0, 0, 0) 0%,
+            rgba(0, 0, 0, 0) calc(var(--clip-left, 0%) - 100%),
+            rgba(0, 0, 0, 1) calc(var(--clip-left, 0%) - 100%)
+          );
         }
 
         .ascii-content {
@@ -1257,22 +1283,6 @@ export function CardScanner() {
           text-align: left;
           vertical-align: top;
           box-sizing: border-box;
-          -webkit-mask-image: linear-gradient(
-            to right,
-            rgba(0, 0, 0, 1) 0%,
-            rgba(0, 0, 0, 0.8) 30%,
-            rgba(0, 0, 0, 0.6) 50%,
-            rgba(0, 0, 0, 0.4) 80%,
-            rgba(0, 0, 0, 0.2) 100%
-          );
-          mask-image: linear-gradient(
-            to right,
-            rgba(0, 0, 0, 1) 0%,
-            rgba(0, 0, 0, 0.8) 30%,
-            rgba(0, 0, 0, 0.6) 50%,
-            rgba(0, 0, 0, 0.4) 80%,
-            rgba(0, 0, 0, 0.2) 100%
-          );
         }
 
         @keyframes glitch {
@@ -1348,7 +1358,7 @@ export function CardScanner() {
           left: 0;
           transform: translateY(-50%);
           width: 100vw;
-          height: 250px;
+          height: 300px;
           z-index: 0;
           pointer-events: none;
         }
