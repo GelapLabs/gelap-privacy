@@ -72,24 +72,24 @@ export default function UseCases() {
   ];
 
   return (
-    <section className="relative min-h-screen bg-background overflow-hidden py-20 px-4">
+    <section className="relative min-h-screen bg-deep_space_blue-100 overflow-hidden py-20 px-4">
       {/* Rounded Gradient Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/3 right-1/3 w-[700px] h-[700px] rounded-full bg-gradient-radial from-secondary/15 via-secondary/5 to-transparent blur-3xl" />
-        <div className="absolute bottom-1/4 left-1/4 w-[600px] h-[600px] rounded-full bg-gradient-radial from-primary/10 via-primary/3 to-transparent blur-3xl" />
+        <div className="absolute top-1/3 right-1/3 w-[700px] h-[700px] rounded-full bg-gradient-radial from-stormy_teal-800/15 via-stormy_teal-800/5 to-transparent blur-3xl" />
+        <div className="absolute bottom-1/4 left-1/4 w-[600px] h-[600px] rounded-full bg-gradient-radial from-midnight_violet-800/10 via-midnight_violet-800/3 to-transparent blur-3xl" />
       </div>
 
       {/* Content */}
       <div className="relative z-10 max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
+          <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">
             Perfect For{" "}
-            <span className="bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-midnight_violet-800 via-stormy_teal-800 to-dark_teal-800 bg-clip-text text-transparent">
               Everyone
             </span>
           </h2>
-          <p className="text-lg text-foreground-secondary max-w-2xl mx-auto">
+          <p className="text-lg text-white max-w-2xl mx-auto">
             No matter your use case, Hidden Layer provides the privacy
             protection you need
           </p>
@@ -105,19 +105,19 @@ export default function UseCases() {
               {/* Emoji & Icon */}
               <div className="flex items-center gap-4 mb-6">
                 <span className="text-5xl">{useCase.emoji}</span>
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <useCase.icon className="w-6 h-6 text-secondary" />
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-midnight_violet-800/20 to-stormy_teal-800/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <useCase.icon className="w-6 h-6 text-stormy_teal-900" />
                 </div>
               </div>
 
               {/* Content */}
-              <h3 className="text-2xl font-bold text-foreground mb-1">
+              <h3 className="text-2xl font-bold text-white mb-1">
                 {useCase.title}
               </h3>
-              <p className="text-sm text-secondary font-semibold mb-4">
+              <p className="text-sm text-stormy_teal-900 font-semibold mb-4">
                 {useCase.subtitle}
               </p>
-              <p className="text-foreground-secondary mb-6 leading-relaxed">
+              <p className="text-white mb-6 leading-relaxed">
                 {useCase.description}
               </p>
 
@@ -126,7 +126,7 @@ export default function UseCases() {
                 {useCase.benefits.map((benefit, i) => (
                   <li
                     key={i}
-                    className="flex items-center gap-2 text-sm text-foreground-muted"
+                    className="flex items-center gap-2 text-sm text-white"
                   >
                     <span className="text-success">✓</span>
                     {benefit}
@@ -147,19 +147,19 @@ export default function UseCases() {
               {/* Emoji & Icon */}
               <div className="flex items-center gap-4 mb-6">
                 <span className="text-5xl">{useCase.emoji}</span>
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <useCase.icon className="w-6 h-6 text-secondary" />
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-midnight_violet-800/20 to-stormy_teal-800/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <useCase.icon className="w-6 h-6 text-stormy_teal-900" />
                 </div>
               </div>
 
               {/* Content */}
-              <h3 className="text-2xl font-bold text-foreground mb-1">
+              <h3 className="text-2xl font-bold text-white mb-1">
                 {useCase.title}
               </h3>
-              <p className="text-sm text-secondary font-semibold mb-4">
+              <p className="text-sm text-stormy_teal-900 font-semibold mb-4">
                 {useCase.subtitle}
               </p>
-              <p className="text-foreground-secondary mb-6 leading-relaxed">
+              <p className="text-white mb-6 leading-relaxed">
                 {useCase.description}
               </p>
 
@@ -168,7 +168,7 @@ export default function UseCases() {
                 {useCase.benefits.map((benefit, i) => (
                   <li
                     key={i}
-                    className="flex items-center gap-2 text-sm text-foreground-muted"
+                    className="flex items-center gap-2 text-sm text-white"
                   >
                     <span className="text-success">✓</span>
                     {benefit}

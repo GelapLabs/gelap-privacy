@@ -69,7 +69,7 @@ export function NavBar({ items, className }: NavBarProps) {
               onClick={() => setActiveTab(item.name)}
               className={cn(
                 "relative cursor-pointer text-sm font-semibold sm:px-6 sm:py-2 py-3 px-4 rounded-full transition-colors",
-                "text-foreground-muted hover:text-white",
+                "text-white hover:text-white",
                 isActive && "bg-muted text-black hover:text-black/50"
               )}
             >
@@ -80,7 +80,7 @@ export function NavBar({ items, className }: NavBarProps) {
               {isActive && (
                 <motion.div
                   layoutId="lamp"
-                  className="absolute inset-0 w-full bg-primary/5 rounded-full -z-10"
+                  className="absolute inset-0 w-full bg-stormy_teal-900/10 rounded-full -z-10"
                   initial={false}
                   transition={{
                     type: "spring",
@@ -115,13 +115,13 @@ export function NavBar({ items, className }: NavBarProps) {
                 ease: [0.4, 0, 0.2, 1],
               }}
               onClick={handleOpenTransfer}
-              className="relative px-6 py-2 rounded-full font-semibold text-sm bg-orange-500 text-white hover:bg-orange-600 transition-colors shadow-lg"
+              className="relative px-6 py-2 rounded-full font-semibold text-sm bg-midnight_violet-600 text-white hover:bg-midnight_violet-500 transition-colors shadow-lg"
             >
               <span className="hidden md:inline">Transfer</span>
               <span className="md:hidden">
                 <ArrowUpRight size={18} strokeWidth={2.5} />
               </span>
-              <div className="absolute inset-0 bg-orange-400/20 rounded-full blur-md -z-10" />
+              <div className="absolute inset-0 bg-midnight_violet-800/20 rounded-full blur-md -z-10" />
             </motion.button>
           )}
         </AnimatePresence>

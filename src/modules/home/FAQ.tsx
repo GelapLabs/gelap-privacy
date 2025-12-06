@@ -50,24 +50,24 @@ export default function FAQ() {
   ];
 
   return (
-    <section className="relative min-h-screen bg-background overflow-hidden py-20 px-4">
+    <section className="relative min-h-screen bg-deep_space_blue-100 overflow-hidden py-20 px-4">
       {/* Rounded Gradient Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 right-1/4 w-[700px] h-[700px] rounded-full bg-gradient-radial from-accent/15 via-accent/5 to-transparent blur-3xl" />
-        <div className="absolute bottom-1/3 left-1/3 w-[600px] h-[600px] rounded-full bg-gradient-radial from-primary/10 via-primary/3 to-transparent blur-3xl" />
+        <div className="absolute top-1/4 right-1/4 w-[700px] h-[700px] rounded-full bg-gradient-radial from-dark_teal-800/15 via-dark_teal-800/5 to-transparent blur-3xl" />
+        <div className="absolute bottom-1/3 left-1/3 w-[600px] h-[600px] rounded-full bg-gradient-radial from-midnight_violet-800/10 via-midnight_violet-800/3 to-transparent blur-3xl" />
       </div>
 
       {/* Content */}
       <div className="relative z-10 max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
+          <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">
             Common{" "}
-            <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-midnight_violet-800 to-stormy_teal-800 bg-clip-text text-transparent">
               Questions
             </span>
           </h2>
-          <p className="text-lg text-foreground-secondary">
+          <p className="text-lg text-white">
             Everything you need to know about Hidden Layer
           </p>
         </div>
@@ -83,11 +83,11 @@ export default function FAQ() {
                 onClick={() => setOpenIndex(openIndex === index ? null : index)}
                 className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-white/5 transition-all"
               >
-                <span className="text-lg font-semibold text-foreground pr-4">
+                <span className="text-lg font-semibold text-white pr-4">
                   {faq.question}
                 </span>
                 <ChevronDown
-                  className={`w-5 h-5 text-secondary flex-shrink-0 transition-transform duration-300 ${
+                  className={`w-5 h-5 text-stormy_teal-900 flex-shrink-0 transition-transform duration-300 ${
                     openIndex === index ? "rotate-180" : ""
                   }`}
                 />
@@ -98,7 +98,7 @@ export default function FAQ() {
                   openIndex === index ? "max-h-96" : "max-h-0"
                 }`}
               >
-                <div className="px-6 pb-5 text-foreground-secondary leading-relaxed">
+                <div className="px-6 pb-5 text-white leading-relaxed">
                   {faq.answer}
                 </div>
               </div>
@@ -108,10 +108,10 @@ export default function FAQ() {
 
         {/* Bottom CTA */}
         <div className="mt-12 text-center glass-dark rounded-3xl p-8">
-          <h3 className="text-2xl font-bold text-foreground mb-3">
+          <h3 className="text-2xl font-bold text-white mb-3">
             Still have questions?
           </h3>
-          <p className="text-foreground-secondary mb-6">
+          <p className="text-white mb-6">
             Our team is here to help you understand how Hidden Layer can protect
             your privacy
           </p>

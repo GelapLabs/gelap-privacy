@@ -1,5 +1,3 @@
-import type { Config } from "tailwindcss";
-
 module.exports = {
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -11,84 +9,125 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Custom color palette for crypto/web3 theme
-        // Based on: 1A1A1D, 3B1C32, 6A1E55, A64D79
-        background: {
-          DEFAULT: "#1A1A1D", // Darkest - main background
-          secondary: "#3B1C32", // Dark purple - secondary background
-          tertiary: "#2A1A26", // In-between shade
+        stormy_teal: {
+          DEFAULT: "#006466",
+          100: "#001414",
+          200: "#002829",
+          300: "#003c3d",
+          400: "#005052",
+          500: "#006466",
+          600: "#00b5b8",
+          700: "#0afbff",
+          800: "#5cfcff",
+          900: "#adfeff",
         },
-        foreground: {
-          DEFAULT: "#ffffff",
-          secondary: "#e5e5e5",
-          muted: "#a0a0a0",
+        dark_teal: {
+          DEFAULT: "#065a60",
+          100: "#011213",
+          200: "#022426",
+          300: "#04363a",
+          400: "#05484d",
+          500: "#065a60",
+          600: "#0ba2ad",
+          700: "#19e2f0",
+          800: "#66ecf5",
+          900: "#b2f5fa",
         },
-        primary: {
-          DEFAULT: "#6A1E55", // Medium purple - main brand color
-          50: "#fdf4f9",
-          100: "#fbe8f3",
-          200: "#f6d1e7",
-          300: "#f0aad5",
-          400: "#e878bb",
-          500: "#d9499e",
-          600: "#c2287d",
-          700: "#a64d79", // Lighter purple/pink
-          800: "#6A1E55", // Medium purple
-          900: "#3B1C32", // Dark purple
-          950: "#1A1A1D", // Darkest
+        dark_teal_2: {
+          DEFAULT: "#0b525b",
+          100: "#021012",
+          200: "#042124",
+          300: "#073136",
+          400: "#094149",
+          500: "#0b525b",
+          600: "#1493a3",
+          700: "#25cee4",
+          800: "#6edeed",
+          900: "#b6eff6",
         },
-        secondary: {
-          DEFAULT: "#A64D79", // Lighter purple/pink - accents
-          50: "#fdf4f9",
-          100: "#fbe8f3",
-          200: "#f8d1e7",
-          300: "#f3abd3",
-          400: "#eb7ab7",
-          500: "#dd4d9a",
-          600: "#c83179",
-          700: "#a64d79", // Lighter purple/pink
-          800: "#8a3b63",
-          900: "#6A1E55", // Medium purple
-          950: "#3B1C32", // Dark purple
+        dark_teal_3: {
+          DEFAULT: "#144552",
+          100: "#040e10",
+          200: "#081b21",
+          300: "#0c2931",
+          400: "#103742",
+          500: "#144552",
+          600: "#247c94",
+          700: "#3aafcf",
+          800: "#7ccadf",
+          900: "#bde4ef",
         },
-        accent: {
-          DEFAULT: "#A64D79",
-          light: "#d9499e",
-          dark: "#6A1E55",
+        charcoal_blue: {
+          DEFAULT: "#1b3a4b",
+          100: "#050c0f",
+          200: "#0b171e",
+          300: "#10232d",
+          400: "#162f3c",
+          500: "#1b3a4b",
+          600: "#316987",
+          700: "#4b96be",
+          800: "#87b9d4",
+          900: "#c3dce9",
         },
-        success: {
-          DEFAULT: "#10b981",
-          light: "#6ee7b7",
-          dark: "#047857",
+        deep_space_blue: {
+          DEFAULT: "#212f45",
+          100: "#07090e",
+          200: "#0d131c",
+          300: "#141c29",
+          400: "#1b2537",
+          500: "#212f45",
+          600: "#3c547c",
+          700: "#5a7baf",
+          800: "#91a7ca",
+          900: "#c8d3e4",
         },
-        warning: {
-          DEFAULT: "#f59e0b",
-          light: "#fbbf24",
-          dark: "#d97706",
+        space_indigo: {
+          DEFAULT: "#272640",
+          100: "#08080d",
+          200: "#100f1a",
+          300: "#171726",
+          400: "#1f1f33",
+          500: "#272640",
+          600: "#464573",
+          700: "#6866a3",
+          800: "#9a99c2",
+          900: "#cdcce0",
         },
-        error: {
-          DEFAULT: "#ef4444",
-          light: "#f87171",
-          dark: "#dc2626",
+        midnight_violet: {
+          DEFAULT: "#312244",
+          100: "#0a070e",
+          200: "#140e1b",
+          300: "#1d1529",
+          400: "#271b36",
+          500: "#312244",
+          600: "#583e7a",
+          700: "#7f5cad",
+          800: "#aa92c8",
+          900: "#d4c9e4",
         },
-        info: {
-          DEFAULT: "#3b82f6",
-          light: "#60a5fa",
-          dark: "#2563eb",
+        midnight_violet_2: {
+          DEFAULT: "#3e1f47",
+          100: "#0c060e",
+          200: "#190c1c",
+          300: "#25132b",
+          400: "#321939",
+          500: "#3e1f47",
+          600: "#703880",
+          700: "#a055b4",
+          800: "#bf8ecd",
+          900: "#dfc6e6",
         },
-        // Glassmorphism colors
-        glass: {
-          DEFAULT: "rgba(255, 255, 255, 0.1)",
-          light: "rgba(255, 255, 255, 0.15)",
-          dark: "rgba(0, 0, 0, 0.1)",
-        },
-        // Crypto specific colors
-        crypto: {
-          bitcoin: "#f7931a",
-          ethereum: "#627eea",
-          usdc: "#2775ca",
-          usdt: "#26a17b",
-          mantle: "#000000",
+        deep_purple: {
+          DEFAULT: "#4d194d",
+          100: "#0f050f",
+          200: "#1f0a1f",
+          300: "#2e0f2e",
+          400: "#3e143e",
+          500: "#4d194d",
+          600: "#8b2d8b",
+          700: "#c346c3",
+          800: "#d784d7",
+          900: "#ebc1eb",
         },
       },
       fontFamily: {
@@ -224,7 +263,12 @@ module.exports = {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     require("@tailwindcss/typography"),
     // Add custom utilities
-    function ({ addUtilities }: any) {
+    function ({
+      addUtilities,
+    }: {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      addUtilities: (utilities: Record<string, any>) => void;
+    }) {
       const newUtilities = {
         ".text-gradient": {
           "background-clip": "text",

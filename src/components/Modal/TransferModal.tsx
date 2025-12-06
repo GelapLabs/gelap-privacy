@@ -106,7 +106,7 @@ export function TransferModal() {
                 borderRadius: "24px",
                 transformOrigin: "top center",
               }}
-              className="relative flex h-full w-full overflow-y-auto bg-gradient-to-br from-primary via-primary-700 to-secondary transform-gpu will-change-transform pointer-events-auto"
+              className="relative flex h-full w-full overflow-y-auto bg-gradient-to-br from-midnight_violet-100 via-midnight_violet-200 to-stormy_teal-200 transform-gpu will-change-transform pointer-events-auto"
             >
               <motion.div
                 initial={{ opacity: 0 }}
@@ -120,7 +120,7 @@ export function TransferModal() {
               >
                 <MeshGradient
                   speed={1}
-                  colors={["#6A1E55", "#3B1C32", "#A64D79", "#d9499e"]}
+                  colors={["#312244", "#006466", "#0b525b", "#3e1f47"]}
                   distortion={0.8}
                   swirl={0.1}
                   grainMixer={0}
@@ -150,7 +150,7 @@ export function TransferModal() {
                       onClick={() => setActiveTab("transfer")}
                       className={`flex-1 px-6 py-3 rounded-full font-semibold transition-all ${
                         activeTab === "transfer"
-                          ? "bg-white text-primary"
+                          ? "bg-white text-midnight_violet-600"
                           : "text-white hover:bg-white/10"
                       }`}
                     >
@@ -161,7 +161,7 @@ export function TransferModal() {
                       onClick={() => setActiveTab("redeem")}
                       className={`flex-1 px-6 py-3 rounded-full font-semibold transition-all ${
                         activeTab === "redeem"
-                          ? "bg-white text-primary"
+                          ? "bg-white text-midnight_violet-600"
                           : "text-white hover:bg-white/10"
                       }`}
                     >
@@ -391,8 +391,8 @@ export function TransferModal() {
                     }
                     className={`group relative flex w-full items-center justify-center gap-2 rounded-full py-4 text-lg font-bold transition-all ${
                       status === "success"
-                        ? "bg-success text-white"
-                        : "bg-white text-primary hover:bg-white/90 hover:shadow-glow"
+                        ? "bg-stormy_teal-600 text-white"
+                        : "bg-white text-midnight_violet-600 hover:bg-white/90 hover:shadow-glow"
                     } disabled:cursor-not-allowed disabled:opacity-50`}
                   >
                     <AnimatePresence mode="wait">
@@ -449,7 +449,7 @@ export function TransferModal() {
                     <motion.div
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="text-center text-sm text-success-light font-medium"
+                      className="text-center text-sm text-stormy_teal-900 font-medium"
                     >
                       ✓{" "}
                       {activeTab === "transfer"
@@ -461,7 +461,7 @@ export function TransferModal() {
                   {/* Privacy Notice */}
                   <div className="pt-4 border-t border-white/10">
                     <div className="flex items-start gap-3">
-                      <ShieldCheck className="h-5 w-5 text-success-light shrink-0 mt-0.5" />
+                      <ShieldCheck className="h-5 w-5 text-stormy_teal-900 shrink-0 mt-0.5" />
                       <div>
                         <p className="text-sm text-white/90 font-medium mb-1">
                           Hidden Layer Protection Active
