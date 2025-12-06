@@ -1,5 +1,18 @@
 "use client";
 
+// Polyfill for SSR
+if (typeof window === "undefined") {
+  (global as any).indexedDB = {
+    open: () => ({
+      result: {},
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      onsuccess: () => {},
+      onerror: () => {},
+    }),
+  };
+}
+
 import { ReactNode } from "react";
 import { WagmiProvider, createConfig, http } from "wagmi";
 import { mainnet, sepolia, base, arbitrum, mantle } from "wagmi/chains";
@@ -18,7 +31,7 @@ const config = getDefaultConfig({
   appName: "Gelap Privacy",
   projectId: "f8aabd752876f7f9ef70f2ed2ff74639", // Can be replaced with other walletconnect project IDs
   chains: [mainnet, sepolia, base, arbitrum, mantle],
-  ssr: true,
+  ssr: false,
 });
 
 interface Web3ProviderProps {
