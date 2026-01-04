@@ -1,6 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import { cn } from "@/src/lib/utils";
 import { Marquee } from "@/src/components/ui/marquee";
+import Image from "next/image";
+import { memo } from "react";
 
 const reviews = [
   {
@@ -46,38 +48,52 @@ const secondRow = reviews.slice(3, 6);
 const thirdRow = reviews.slice(0, 3);
 const fourthRow = reviews.slice(3, 6);
 
-const ReviewCard = ({
-  img,
-  name,
-  username,
-  body,
-}: {
-  img: string;
-  name: string;
-  username: string;
-  body: string;
-}) => {
-  return (
-    <figure
-      className={cn(
-        "relative h-full w-44 cursor-pointer overflow-hidden rounded-xl border p-4",
-        "border-stormy_teal-500/20 bg-black/40 backdrop-blur-sm",
-        "hover:bg-stormy_teal-500/10 hover:border-stormy_teal-500/40 transition-all",
-      )}
-    >
-      <div className="flex flex-row items-center gap-2">
-        <img className="rounded-full" width="32" height="32" alt="" src={img} />
-        <div className="flex flex-col">
-          <figcaption className="text-sm font-medium text-white">
-            {name}
-          </figcaption>
-          <p className="text-xs font-medium text-stormy_teal-500">{username}</p>
+const ReviewCard = memo(
+  ({
+    img,
+    name,
+    username,
+    body,
+  }: {
+    img: string;
+    name: string;
+    username: string;
+    body: string;
+  }) => {
+    return (
+      <figure
+        className={cn(
+          "relative h-full w-44 cursor-pointer overflow-hidden rounded-xl border p-4",
+          "border-stormy_teal-500/20 bg-black/40 backdrop-blur-sm",
+          "hover:bg-stormy_teal-500/10 hover:border-stormy_teal-500/40 transition-all"
+        )}
+      >
+        <div className="flex flex-row items-center gap-2">
+          <Image
+            className="rounded-full"
+            width={32}
+            height={32}
+            alt={`${name} avatar`}
+            src={img}
+            loading="lazy"
+            unoptimized
+          />
+          <div className="flex flex-col">
+            <figcaption className="text-sm font-medium text-white">
+              {name}
+            </figcaption>
+            <p className="text-xs font-medium text-stormy_teal-500">
+              {username}
+            </p>
+          </div>
         </div>
-      </div>
-      <blockquote className="mt-2 text-sm text-white/70">{body}</blockquote>
-    </figure>
-  );
-};
+        <blockquote className="mt-2 text-sm text-white/70">{body}</blockquote>
+      </figure>
+    );
+  }
+);
+
+ReviewCard.displayName = "ReviewCard";
 
 export default function Testimonials() {
   return (

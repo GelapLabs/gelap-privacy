@@ -1,9 +1,25 @@
 "use client";
 
 import { ArrowUpRight } from "lucide-react";
-import { CardScanner } from "@/src/components/Layout/CardScanner";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { ShimmerButton } from "@/src/components/ui/shimmer-button";
+
+// Lazy load CardScanner karena menggunakan THREE.js
+const CardScanner = dynamic(
+  () =>
+    import("@/src/components/Layout/CardScanner").then((mod) => ({
+      default: mod.CardScanner,
+    })),
+  {
+    loading: () => (
+      <div className="w-full h-[400px] flex items-center justify-center">
+        <div className="animate-pulse text-stormy_teal-500">Loading...</div>
+      </div>
+    ),
+    ssr: false,
+  }
+);
 
 export default function Hero() {
   return (
@@ -12,13 +28,14 @@ export default function Hero() {
       <CardScanner />
       <div className="flex justify-center flex-col mt-8 items-center gap-4">
         <h1 className="bg-gradient-to-br from-white via-white to-stormy_teal-900 bg-clip-text text-4xl font-bold tracking-tighter text-transparent sm:text-6xl">
-          The <span className="underline underline-offset-4">Easiest</span>{" "}
-          Hidden Layer <br />
-          Web3 Transfer Experience
+          The First{" "}
+          <span className="underline underline-offset-4">
+            Confidential <br /> RWA Dark Pool{" "}
+          </span>
+          on Mantle
         </h1>
-        <p className="text-lg text-white sm:text-xl mb-2">
-          Fast, private, and invisible blockchain transfers—powered by next-gen
-          encryption.
+        <p className="text-lg text-white sm:text-3xl mb-2">
+          Trade in the Dark, Settle in the Light
         </p>
         <div className="inline-block relative">
           <Link href="/app">
