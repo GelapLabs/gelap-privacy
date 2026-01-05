@@ -2,11 +2,10 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import "@rainbow-me/rainbowkit/styles.css";
-import { NavBarPage } from "@/src/components/Element/Navbar/Navbar";
-import { Footer } from "@/src/components/Element/Footer/Footer";
 import { TransferProvider } from "@/src/contexts/TransferContext";
 import { TransferModal } from "@/src/components/Modal/TransferModal";
 import { Web3Provider } from "@/src/providers/Web3Provider";
+import { ConditionalLayout } from "@/src/components/Layout/ConditionalLayout";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -110,10 +109,8 @@ export default function RootLayout({
       >
         <Web3Provider>
           <TransferProvider>
-            <NavBarPage />
             <TransferModal />
-            {children}
-            <Footer />
+            <ConditionalLayout>{children}</ConditionalLayout>
           </TransferProvider>
         </Web3Provider>
       </body>

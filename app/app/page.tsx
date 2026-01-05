@@ -48,7 +48,7 @@ function AppContent() {
   }
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen">
       <AppNavbar />
       <main className="pt-16">
         {activeTab === "dashboard" && <Dashboard />}
