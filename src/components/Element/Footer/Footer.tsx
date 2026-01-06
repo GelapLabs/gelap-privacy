@@ -49,7 +49,7 @@ export function Footer() {
             </div>
 
             <p className="text-white/60 text-lg mb-4">
-              Confidential RWA Dark Pool on Mantle.
+              The First Confidential RWA Dark Pool on Mantle.
             </p>
             {/* Social Links */}
             <div className="flex gap-4">
