@@ -14,6 +14,7 @@
     "@base-org/account": "^2.5.0",
     "@coinbase/wallet-sdk": "^4.3.7",
     "@gemini-wallet/core": "^0.3.2",
+    "@mantleio/viem": "0.0.1-alpha.1",
     "@metamask/sdk": "^0.34.0",
     "@noble/curves": "^2.0.1",
     "@noble/hashes": "^2.0.1",

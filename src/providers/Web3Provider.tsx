@@ -14,8 +14,9 @@ if (typeof window === "undefined") {
 }
 
 import { ReactNode } from "react";
-import { WagmiProvider, createConfig, http } from "wagmi";
-import { mainnet, sepolia, base, arbitrum, mantle } from "wagmi/chains";
+import { WagmiProvider } from "wagmi";
+import { mainnet, sepolia } from "wagmi/chains";
+import { mantleSepoliaTestnet, mantle } from "@mantleio/viem/chains";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   RainbowKitProvider,
@@ -30,7 +31,7 @@ const queryClient = new QueryClient();
 const config = getDefaultConfig({
   appName: "Gelap",
   projectId: "f8aabd752876f7f9ef70f2ed2ff74639", // Can be replaced with other walletconnect project IDs
-  chains: [mainnet, sepolia, base, arbitrum, mantle],
+  chains: [mainnet, sepolia, mantleSepoliaTestnet, mantle],
   ssr: false,
 });
 
