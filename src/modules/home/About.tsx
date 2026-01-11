@@ -47,14 +47,14 @@ export default function About() {
       />
       <div className="flex flex-col w-full max-w-[75em] items-center justify-center text-center mt-16 -mb-10 px-4">
         <h2 className="bg-gradient-to-br from-white via-white to-stormy_teal-900 bg-clip-text text-4xl font-bold tracking-tighter text-transparent sm:text-6xl mb-4">
-          We are connected globally
+          The Privacy Layer for
           <br />
-          through blockchain!
+          Global Finance
         </h2>
         <p className="text-lg text-white/70 sm:text-xl max-w-2xl">
-          Connected across blockchains worldwide.
+          Execute dark transfers, private swaps, and confidential RWA ownership.
           <br />
-          Your transactions stay private, everywhere.
+          Powered by SP1 zkVM on Mantle Network.
         </p>
       </div>
       <div className="relative flex w-full max-w-[75em] items-center justify-center min-h-[600px]">

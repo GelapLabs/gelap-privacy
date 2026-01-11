@@ -33,7 +33,7 @@ const nextConfig: NextConfig = {
   compiler: {
     removeConsole: process.env.NODE_ENV === "production",
   },
-  reactCompiler: true,
+  reactCompiler: false, // Disabled due to Next.js 16.x SSG bug with error pages
 
   // React strict mode untuk development
   reactStrictMode: true,
