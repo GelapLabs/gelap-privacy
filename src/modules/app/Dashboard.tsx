@@ -2,95 +2,34 @@
 
 import { useApp } from "@/src/contexts/AppContext";
 import { useAccount, useBalance } from "wagmi";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import * as motion from "motion/react-client";
 import {
   Check,
   Loader2,
   Circle,
   Shield,
-  FileCheck,
-  ArrowUpRight,
-  ArrowDownRight,
   RefreshCw,
+  AlertCircle,
+  ArrowDownRight,
+  ArrowUpRight,
 } from "lucide-react";
-
-// Mock data for treasury rates (would come from Chronicle/Chainlink in production)
-const treasuryRates = {
-  ustbYield: 5.28,
-  usdcLend: 4.85,
-  privateCredit: 11.5,
-  lastUpdated: "14:30 EST",
-};
-
-// Mock holdings data
-const holdings = [
-  {
-    id: 1,
-    instrument: "USTB",
-    description: "US T-Bill Fund",
-    type: "FIXED INCOME",
-    typeColor: "bg-blue-600",
-    yieldApy: 5.2,
-    position: 12287.52,
-    valueUsd: 12500.5,
-    allocPercent: 27.7,
-  },
-  {
-    id: 2,
-    instrument: "USDC",
-    description: "USDC Treasury",
-    type: "CASH EQ.",
-    typeColor: "bg-green-600",
-    yieldApy: 0.0,
-    position: 45000,
-    valueUsd: 45000.0,
-    allocPercent: 62.3,
-  },
-  {
-    id: 3,
-    instrument: "PCF1",
-    description: "PC Fund",
-    type: "PRIVATE CREDIT",
-    typeColor: "bg-purple-600",
-    yieldApy: 11.5,
-    position: 470.19,
-    valueUsd: 5000.0,
-    allocPercent: 10.0,
-  },
-];
-
-// Mock execution log
-const executionLog = [
-  {
-    id: 1,
-    type: "EXECUTION",
-    title: "Buy USTB via Dark Pool",
-    counterparty: "Confidential",
-    amount: "5,000.00 USDC",
-    timestamp: "13:00:05",
-  },
-  {
-    id: 2,
-    type: "DEPOSIT",
-    title: "Shielded Ingress",
-    counterparty: "Coinbase Inst.",
-    amount: "+10,000.00 USDC",
-    timestamp: "12:01:52",
-  },
-  {
-    id: 3,
-    type: "TRANSFER",
-    title: "Internal Allocation",
-    counterparty: "Sub-fund A",
-    amount: "-2,500.00 USTB",
-    timestamp: "09:12:08",
-  },
-];
+import { formatUnits, type Address } from "viem";
+import { SUPPORTED_TOKENS, DEFAULT_CHAIN_ID } from "@/src/lib/constants";
+import { useTreasuryRates } from "@/src/hooks/useTreasuryRates";
 
 function WalletGenerationStepper() {
-  const { walletGenerationSteps, isGeneratingWallet, privacyWalletGenerated } =
-    useApp();
+  const { walletGenerationSteps, privacyWalletGenerated, resetWalletGeneration, startWalletGeneration, isGeneratingWallet } = useApp();
+
+  const hasError = walletGenerationSteps.some((step) => step.status === "error");
+
+  const handleRetry = () => {
+    resetWalletGeneration();
+    // Small delay to let state reset
+    setTimeout(() => {
+      startWalletGeneration();
+    }, 100);
+  };
 
   return (
     <motion.div
@@ -102,7 +41,7 @@ function WalletGenerationStepper() {
         Generating Privacy Wallet
       </h3>
       <div className="space-y-4">
-        {walletGenerationSteps.map((step, index) => (
+        {walletGenerationSteps.map((step) => (
           <div key={step.id} className="flex items-start gap-4">
             <div className="flex-shrink-0 mt-0.5">
               {step.status === "complete" ? (
@@ -110,8 +49,12 @@ function WalletGenerationStepper() {
                   <Check className="w-4 h-4 text-white" />
                 </div>
               ) : step.status === "loading" ? (
-                <div className="w-6 h-6 bg-stormy_teal-600 rounded-full flex items-center justify-center">
+                <div className="w-6 h-6 bg-purple-600 rounded-full flex items-center justify-center">
                   <Loader2 className="w-4 h-4 text-white animate-spin" />
+                </div>
+              ) : step.status === "error" ? (
+                <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
+                  <AlertCircle className="w-4 h-4 text-white" />
                 </div>
               ) : (
                 <div className="w-6 h-6 border-2 border-zinc-700 rounded-full flex items-center justify-center">
@@ -126,12 +69,16 @@ function WalletGenerationStepper() {
                     ? "text-green-400"
                     : step.status === "loading"
                       ? "text-white"
-                      : "text-zinc-500"
+                      : step.status === "error"
+                        ? "text-red-400"
+                        : "text-zinc-500"
                 }`}
               >
                 {step.title}
               </p>
-              <p className="text-sm text-zinc-500 mt-0.5">{step.description}</p>
+              <p className={`text-sm mt-0.5 ${step.status === "error" ? "text-red-400/70" : "text-zinc-500"}`}>
+                {step.description}
+              </p>
             </div>
           </div>
         ))}
@@ -147,15 +94,126 @@ function WalletGenerationStepper() {
           </p>
         </motion.div>
       )}
+      {hasError && !isGeneratingWallet && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="mt-6"
+        >
+          <button
+            onClick={handleRetry}
+            className="w-full py-3 bg-purple-600 hover:bg-purple-500 rounded-lg text-white font-medium transition-colors"
+          >
+            Retry Generation
+          </button>
+        </motion.div>
+      )}
     </motion.div>
   );
 }
 
 export default function Dashboard() {
-  const { isConnected, address } = useAccount();
+  const { isConnected, address, chainId } = useAccount();
   const { data: balance } = useBalance({ address });
-  const { isGeneratingWallet, privacyWalletGenerated, startWalletGeneration } =
-    useApp();
+  const {
+    isGeneratingWallet,
+    privacyWalletGenerated,
+    startWalletGeneration,
+    shieldedBalance,
+    balanceByToken,
+    unspentNotes,
+    isLoadingBalance,
+    refreshBalance,
+    isSyncing,
+    syncWithChain,
+    setActiveTab,
+  } = useApp();
+
+  // Treasury rates from DeFiLlama
+  const treasuryRates = useTreasuryRates();
+
+  // Get token info
+  const tokens = SUPPORTED_TOKENS[chainId ?? DEFAULT_CHAIN_ID] ?? [];
+
+  // Convert balanceByToken to holdings format
+  const holdings = useMemo(() => {
+    const result: Array<{
+      id: number;
+      instrument: string;
+      description: string;
+      type: string;
+      typeColor: string;
+      yieldApy: number;
+      position: number;
+      valueUsd: number;
+      allocPercent: number;
+    }> = [];
+
+    let totalValue = 0;
+    const entries = Array.from(balanceByToken.entries());
+    
+    entries.forEach(([tokenAddress, balance]) => {
+      const token = tokens.find(
+        (t) => t.address.toLowerCase() === tokenAddress.toLowerCase()
+      );
+      if (token) {
+        const amount = Number(formatUnits(balance, token.decimals));
+        totalValue += amount; // Assuming 1:1 for stablecoins
+      }
+    });
+
+    entries.forEach(([tokenAddress, balance], index) => {
+      const token = tokens.find(
+        (t) => t.address.toLowerCase() === tokenAddress.toLowerCase()
+      );
+      if (token) {
+        const amount = Number(formatUnits(balance, token.decimals));
+        result.push({
+          id: index + 1,
+          instrument: token.symbol,
+          description: token.name,
+          type: token.symbol === "USDC" ? "CASH EQ." : "SHIELDED",
+          typeColor: token.symbol === "USDC" ? "bg-green-600" : "bg-purple-600",
+          yieldApy: 0,
+          position: amount,
+          valueUsd: amount, // 1:1 for stablecoins
+          allocPercent: totalValue > 0 ? (amount / totalValue) * 100 : 0,
+        });
+      }
+    });
+
+    // If no shielded holdings, show placeholder
+    if (result.length === 0 && shieldedBalance > 0n) {
+      result.push({
+        id: 1,
+        instrument: "SHIELDED",
+        description: "Private Assets",
+        type: "SHIELDED",
+        typeColor: "bg-purple-600",
+        yieldApy: 0,
+        position: Number(shieldedBalance),
+        valueUsd: Number(shieldedBalance),
+        allocPercent: 100,
+      });
+    }
+
+    return result;
+  }, [balanceByToken, tokens, shieldedBalance]);
+
+  // Calculate total NAV from holdings
+  const totalNav = holdings.reduce((sum, h) => sum + h.valueUsd, 0);
+
+  // Build execution log from notes
+  const executionLog = useMemo(() => {
+    return unspentNotes.slice(0, 5).map((note, index) => ({
+      id: index + 1,
+      type: "DEPOSIT" as const,
+      title: "Shielded Deposit",
+      counterparty: "Self",
+      amount: `+${formatUnits(note.amount, 6)} tokens`,
+      timestamp: new Date(Number(note.blockNumber) * 1000).toLocaleTimeString(),
+    }));
+  }, [unspentNotes]);
 
   // Start wallet generation when connected
   useEffect(() => {
@@ -178,9 +236,6 @@ export default function Dashboard() {
     );
   }
 
-  // Calculate total NAV from holdings
-  const totalNav = holdings.reduce((sum, h) => sum + h.valueUsd, 0);
-
   return (
     <div className="p-6 max-w-7xl mx-auto">
       {/* Top Row - 3 Cards */}
@@ -191,28 +246,59 @@ export default function Dashboard() {
           animate={{ opacity: 1, y: 0 }}
           className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6"
         >
-          <div className="flex items-center gap-2 text-zinc-400 text-sm mb-2">
-            <span>NET ASSET VALUE (NAV)</span>
+          <div className="flex items-center justify-between text-zinc-400 text-sm mb-2">
+            <span>SHIELDED BALANCE</span>
+            <button
+              onClick={() => refreshBalance()}
+              disabled={isLoadingBalance || isSyncing}
+              className="text-zinc-500 hover:text-white transition-colors"
+            >
+              <RefreshCw
+                className={`w-4 h-4 ${(isLoadingBalance || isSyncing) ? "animate-spin" : ""}`}
+              />
+            </button>
           </div>
           <div className="flex items-baseline gap-2 mb-4">
             <span className="text-3xl font-bold text-white">
-              ${totalNav.toLocaleString("en-US", { minimumFractionDigits: 2 })}
+              {totalNav > 0
+                ? `$${totalNav.toLocaleString("en-US", { minimumFractionDigits: 2 })}`
+                : "$0.00"}
             </span>
-            <span className="text-green-400 text-sm">+1.24%</span>
+            {totalNav > 0 && (
+              <span className="text-green-400 text-sm">SHIELDED</span>
+            )}
           </div>
           <div className="grid grid-cols-3 gap-4 text-sm">
             <div>
-              <p className="text-zinc-500">YTD RETURN</p>
-              <p className="text-white">+8.45%</p>
+              <p className="text-zinc-500">NOTES</p>
+              <p className="text-white">{unspentNotes.length}</p>
             </div>
             <div>
-              <p className="text-zinc-500">COLLAT. %</p>
-              <p className="text-white">100.0%</p>
-            </div>
-            <div>
-              <p className="text-zinc-500">VAULTS QTY</p>
+              <p className="text-zinc-500">STATUS</p>
               <p className="text-green-400">● Active</p>
             </div>
+            <div>
+              <p className="text-zinc-500">PRIVACY</p>
+              <p className="text-purple-400">● Full</p>
+            </div>
+          </div>
+          
+          {/* Quick Actions */}
+          <div className="flex gap-2 mt-4 pt-4 border-t border-zinc-800">
+            <button
+              onClick={() => setActiveTab("deposit")}
+              className="flex-1 py-2 bg-purple-600 hover:bg-purple-500 text-white text-xs font-medium rounded-lg transition-colors flex items-center justify-center gap-1"
+            >
+              <ArrowDownRight className="w-3 h-3" />
+              Deposit
+            </button>
+            <button
+              onClick={() => setActiveTab("withdraw")}
+              className="flex-1 py-2 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-white text-xs font-medium rounded-lg transition-colors flex items-center justify-center gap-1"
+            >
+              <ArrowUpRight className="w-3 h-3" />
+              Withdraw
+            </button>
           </div>
         </motion.div>
 
@@ -226,28 +312,33 @@ export default function Dashboard() {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <Shield className="w-5 h-5 text-zinc-400" />
-              <span className="text-zinc-400 text-sm">COMPLIANCE & AUDIT</span>
+              <span className="text-zinc-400 text-sm">PRIVACY STATUS</span>
             </div>
             <span className="px-2 py-1 bg-green-500/20 text-green-400 text-xs rounded">
-              PASS
+              ACTIVE
             </span>
           </div>
           <div className="space-y-3 text-sm">
             <div className="flex justify-between">
-              <span className="text-zinc-500">KYB Status</span>
-              <span className="text-white">VERIFIED (11)</span>
+              <span className="text-zinc-500">Wallet Type</span>
+              <span className="text-white">STEALTH</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-zinc-500">Jurisdiction</span>
-              <span className="text-yellow-400">BVI / SG</span>
+              <span className="text-zinc-500">Commitments</span>
+              <span className="text-purple-400">{unspentNotes.length} UTXO</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-zinc-500">Auditor Mode</span>
-              <span className="text-zinc-400">OFF</span>
+              <span className="text-zinc-500">ZK Proofs</span>
+              <span className="text-cyan-400">SP1 ENABLED</span>
             </div>
           </div>
-          <button className="w-full mt-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-400 text-sm hover:bg-zinc-700 transition-colors">
-            GENERATE AUDIT REPORT
+          <button
+            onClick={() => syncWithChain()}
+            disabled={isSyncing}
+            className="w-full mt-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-400 text-sm hover:bg-zinc-700 transition-colors flex items-center justify-center gap-2"
+          >
+            {isSyncing && <Loader2 className="w-3 h-3 animate-spin" />}
+            {isSyncing ? "SYNCING..." : "SYNC WITH CHAIN"}
           </button>
         </motion.div>
 
@@ -293,67 +384,80 @@ export default function Dashboard() {
           className="lg:col-span-3 bg-zinc-900/50 border border-zinc-800 rounded-xl p-6"
         >
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-white font-semibold">HOLDINGS ALLOCATION</h3>
-            <button className="text-cyan-400 text-sm hover:text-cyan-300 transition-colors">
-              Rebalance Portfolio
+            <h3 className="text-white font-semibold">SHIELDED HOLDINGS</h3>
+            <button
+              onClick={() => setActiveTab("deposit")}
+              className="text-cyan-400 text-sm hover:text-cyan-300 transition-colors"
+            >
+              + Add Funds
             </button>
           </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="text-zinc-500 text-left border-b border-zinc-800">
-                  <th className="pb-3 font-medium">INSTRUMENT</th>
-                  <th className="pb-3 font-medium">TYPE</th>
-                  <th className="pb-3 font-medium text-right">YIELD (APY)</th>
-                  <th className="pb-3 font-medium text-right">POSITION</th>
-                  <th className="pb-3 font-medium text-right">VALUE (USD)</th>
-                  <th className="pb-3 font-medium text-right">ALLOC %</th>
-                </tr>
-              </thead>
-              <tbody>
-                {holdings.map((holding) => (
-                  <tr key={holding.id} className="border-b border-zinc-800/50">
-                    <td className="py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-zinc-800 rounded-full flex items-center justify-center text-xs font-bold text-white">
-                          {holding.instrument.charAt(0)}
-                        </div>
-                        <div>
-                          <p className="text-white font-medium">
-                            {holding.instrument}
-                          </p>
-                          <p className="text-zinc-500 text-xs">
-                            {holding.description}
-                          </p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="py-4">
-                      <span
-                        className={`px-2 py-1 ${holding.typeColor} text-white text-xs rounded`}
-                      >
-                        {holding.type}
-                      </span>
-                    </td>
-                    <td className="py-4 text-right text-cyan-400">
-                      {holding.yieldApy}%
-                    </td>
-                    <td className="py-4 text-right text-white">
-                      {holding.position.toLocaleString()}
-                    </td>
-                    <td className="py-4 text-right text-cyan-400">
-                      {holding.valueUsd.toLocaleString("en-US", {
-                        minimumFractionDigits: 2,
-                      })}
-                    </td>
-                    <td className="py-4 text-right text-white">
-                      {holding.allocPercent}%
-                    </td>
+          
+          {holdings.length > 0 ? (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="text-zinc-500 text-left border-b border-zinc-800">
+                    <th className="pb-3 font-medium">ASSET</th>
+                    <th className="pb-3 font-medium">TYPE</th>
+                    <th className="pb-3 font-medium text-right">AMOUNT</th>
+                    <th className="pb-3 font-medium text-right">VALUE (USD)</th>
+                    <th className="pb-3 font-medium text-right">ALLOC %</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {holdings.map((holding) => (
+                    <tr key={holding.id} className="border-b border-zinc-800/50">
+                      <td className="py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 bg-zinc-800 rounded-full flex items-center justify-center text-xs font-bold text-white">
+                            {holding.instrument.charAt(0)}
+                          </div>
+                          <div>
+                            <p className="text-white font-medium">
+                              {holding.instrument}
+                            </p>
+                            <p className="text-zinc-500 text-xs">
+                              {holding.description}
+                            </p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="py-4">
+                        <span
+                          className={`px-2 py-1 ${holding.typeColor} text-white text-xs rounded`}
+                        >
+                          {holding.type}
+                        </span>
+                      </td>
+                      <td className="py-4 text-right text-white">
+                        {holding.position.toLocaleString()}
+                      </td>
+                      <td className="py-4 text-right text-cyan-400">
+                        ${holding.valueUsd.toLocaleString("en-US", {
+                          minimumFractionDigits: 2,
+                        })}
+                      </td>
+                      <td className="py-4 text-right text-white">
+                        {holding.allocPercent.toFixed(1)}%
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <Shield className="w-12 h-12 text-zinc-700 mx-auto mb-4" />
+              <p className="text-zinc-500 mb-4">No shielded assets yet</p>
+              <button
+                onClick={() => setActiveTab("deposit")}
+                className="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white text-sm rounded-lg transition-colors"
+              >
+                Make Your First Deposit
+              </button>
+            </div>
+          )}
         </motion.div>
 
         {/* Execution Log */}
@@ -364,55 +468,63 @@ export default function Dashboard() {
           className="lg:col-span-2 bg-zinc-900/50 border border-zinc-800 rounded-xl p-6"
         >
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-white font-semibold">EXECUTION LOG</h3>
+            <h3 className="text-white font-semibold">RECENT ACTIVITY</h3>
             <span className="text-zinc-600 text-xs">...</span>
           </div>
-          <div className="space-y-4">
-            {executionLog.map((log) => (
-              <div
-                key={log.id}
-                className="flex items-start justify-between pb-4 border-b border-zinc-800/50 last:border-0"
-              >
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span
-                      className={`px-2 py-0.5 text-xs rounded ${
-                        log.type === "EXECUTION"
-                          ? "bg-purple-500/20 text-purple-400"
-                          : log.type === "DEPOSIT"
+          
+          {executionLog.length > 0 ? (
+            <div className="space-y-4">
+              {executionLog.map((log) => (
+                <div
+                  key={log.id}
+                  className="flex items-start justify-between pb-4 border-b border-zinc-800/50 last:border-0"
+                >
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span
+                        className={`px-2 py-0.5 text-xs rounded ${
+                          log.type === "DEPOSIT"
                             ? "bg-green-500/20 text-green-400"
-                            : "bg-blue-500/20 text-blue-400"
+                            : log.type === "TRANSFER"
+                              ? "bg-blue-500/20 text-blue-400"
+                              : "bg-purple-500/20 text-purple-400"
+                        }`}
+                      >
+                        {log.type}
+                      </span>
+                      <span className="text-zinc-600 text-xs">
+                        {log.timestamp}
+                      </span>
+                    </div>
+                    <p className="text-white text-sm">{log.title}</p>
+                    <p className="text-zinc-500 text-xs">
+                      {log.counterparty}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p
+                      className={`text-sm ${
+                        log.amount.startsWith("+")
+                          ? "text-green-400"
+                          : log.amount.startsWith("-")
+                            ? "text-red-400"
+                            : "text-white"
                       }`}
                     >
-                      {log.type}
-                    </span>
-                    <span className="text-zinc-600 text-xs">
-                      {log.timestamp}
-                    </span>
+                      {log.amount}
+                    </p>
                   </div>
-                  <p className="text-white text-sm">{log.title}</p>
-                  <p className="text-zinc-500 text-xs">
-                    CP: {log.counterparty}
-                  </p>
                 </div>
-                <div className="text-right">
-                  <p
-                    className={`text-sm ${
-                      log.amount.startsWith("+")
-                        ? "text-green-400"
-                        : log.amount.startsWith("-")
-                          ? "text-red-400"
-                          : "text-white"
-                    }`}
-                  >
-                    {log.amount}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8">
+              <p className="text-zinc-500 text-sm">No recent activity</p>
+            </div>
+          )}
+          
           <button className="w-full mt-4 py-2 text-zinc-500 text-sm hover:text-zinc-400 transition-colors">
-            VIEW FULL BLOTTER
+            VIEW FULL HISTORY
           </button>
         </motion.div>
       </div>

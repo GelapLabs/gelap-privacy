@@ -1,0 +1,271 @@
+import type { Address, Hex } from "viem";
+import { mantleSepoliaTestnet, mantle } from "@mantleio/viem/chains";
+
+// ============================================================================
+// Contract Addresses
+// ============================================================================
+
+export const CONTRACT_ADDRESSES = {
+  // Mantle Sepolia Testnet
+  [mantleSepoliaTestnet.id]: {
+    gelapShieldedAccount: "0x54EC23CBCE1A9d33F05C4d3d79Ec28Aff3c8ce8D" as Address,
+    mockSP1Verifier: "0x79117dbB5A08B03cD796d06EdeEC6e0f2c554f4B" as Address,
+  },
+  // Mantle Mainnet (placeholder - update when deployed)
+  [mantle.id]: {
+    gelapShieldedAccount: "0x0000000000000000000000000000000000000000" as Address,
+    mockSP1Verifier: "0x0000000000000000000000000000000000000000" as Address,
+  },
+} as const;
+
+// Default chain for development
+export const DEFAULT_CHAIN_ID = mantleSepoliaTestnet.id;
+
+// ============================================================================
+// Supported Tokens
+// ============================================================================
+
+export interface TokenInfo {
+  address: Address;
+  symbol: string;
+  name: string;
+  decimals: number;
+  icon?: string;
+}
+
+export const SUPPORTED_TOKENS: Record<number, TokenInfo[]> = {
+  [mantleSepoliaTestnet.id]: [
+    {
+      address: "0x0000000000000000000000000000000000000000" as Address, // Placeholder - update with real USDC
+      symbol: "USDC",
+      name: "USD Coin",
+      decimals: 6,
+    },
+    {
+      address: "0x0000000000000000000000000000000000000001" as Address, // Placeholder - update with real WMNT
+      symbol: "WMNT",
+      name: "Wrapped Mantle",
+      decimals: 18,
+    },
+  ],
+  [mantle.id]: [
+    {
+      address: "0x09Bc4E0D864854c6aFB6eB9A9cdF58aC190D0dF9" as Address, // USDC on Mantle
+      symbol: "USDC",
+      name: "USD Coin",
+      decimals: 6,
+    },
+    {
+      address: "0x78c1b0C915c4FAA5FffA6CAbf0219DA63d7f4cb8" as Address, // WMNT on Mantle
+      symbol: "WMNT",
+      name: "Wrapped Mantle",
+      decimals: 18,
+    },
+  ],
+};
+
+// ============================================================================
+// Contract ABIs
+// ============================================================================
+
+export const GELAP_SHIELDED_ACCOUNT_ABI = [
+  // State Variables (read)
+  {
+    inputs: [],
+    name: "merkleRoot",
+    outputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+    name: "nullifierUsed",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    name: "zeroHashes",
+    outputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "nextLeafIndex",
+    outputs: [{ internalType: "uint32", name: "", type: "uint32" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "sp1Verifier",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "sp1ProgramVKey",
+    outputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+    stateMutability: "view",
+    type: "function",
+  },
+
+  // Deposit
+  {
+    inputs: [
+      { internalType: "address", name: "token", type: "address" },
+      { internalType: "uint256", name: "amount", type: "uint256" },
+      { internalType: "bytes32", name: "commitment", type: "bytes32" },
+      { internalType: "bytes", name: "encryptedMemo", type: "bytes" },
+    ],
+    name: "deposit",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+
+  // Transact (private transfer)
+  {
+    inputs: [
+      { internalType: "bytes", name: "publicInputs", type: "bytes" },
+      { internalType: "bytes", name: "proofBytes", type: "bytes" },
+    ],
+    name: "transact",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+
+  // Withdraw
+  {
+    inputs: [
+      { internalType: "bytes", name: "publicInputs", type: "bytes" },
+      { internalType: "bytes", name: "proofBytes", type: "bytes" },
+      { internalType: "address", name: "receiver", type: "address" },
+    ],
+    name: "withdraw",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+
+  // Execute Swap (dark pool)
+  {
+    inputs: [
+      { internalType: "bytes", name: "publicInputs", type: "bytes" },
+      { internalType: "bytes", name: "proofBytes", type: "bytes" },
+    ],
+    name: "executeSwap",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+
+  // Events
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: false, internalType: "bytes32", name: "commitment", type: "bytes32" },
+      { indexed: false, internalType: "bytes", name: "encryptedMemo", type: "bytes" },
+    ],
+    name: "AccountUpdated",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: false, internalType: "bytes32", name: "newRoot", type: "bytes32" },
+      { indexed: false, internalType: "bytes32[]", name: "nullifiers", type: "bytes32[]" },
+      { indexed: false, internalType: "bytes32[]", name: "newCommitments", type: "bytes32[]" },
+    ],
+    name: "TransactionExecuted",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: "address", name: "receiver", type: "address" },
+      { indexed: true, internalType: "address", name: "token", type: "address" },
+      { indexed: false, internalType: "uint256", name: "amount", type: "uint256" },
+    ],
+    name: "WithdrawExecuted",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: false, internalType: "bytes32", name: "newRoot", type: "bytes32" },
+      { indexed: false, internalType: "bytes32", name: "orderAKeyImage", type: "bytes32" },
+      { indexed: false, internalType: "bytes32", name: "orderBKeyImage", type: "bytes32" },
+    ],
+    name: "SwapExecuted",
+    type: "event",
+  },
+] as const;
+
+// ERC20 ABI (minimal for approve and allowance)
+export const ERC20_ABI = [
+  {
+    inputs: [
+      { internalType: "address", name: "spender", type: "address" },
+      { internalType: "uint256", name: "amount", type: "uint256" },
+    ],
+    name: "approve",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "owner", type: "address" },
+      { internalType: "address", name: "spender", type: "address" },
+    ],
+    name: "allowance",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "account", type: "address" }],
+    name: "balanceOf",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "decimals",
+    outputs: [{ internalType: "uint8", name: "", type: "uint8" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "symbol",
+    outputs: [{ internalType: "string", name: "", type: "string" }],
+    stateMutability: "view",
+    type: "function",
+  },
+] as const;
+
+// ============================================================================
+// Merkle Tree Configuration
+// ============================================================================
+
+export const MERKLE_TREE_DEPTH = 32;
+
+// ============================================================================
+// Prover API Configuration (Mock for now - replace with real endpoint)
+// ============================================================================
+
+export const PROVER_API_URL = process.env.NEXT_PUBLIC_PROVER_API_URL || "http://localhost:3001";
+
+export const PROVER_ENDPOINTS = {
+  generateTransactionProof: "/api/prove/transaction",
+  generateWithdrawProof: "/api/prove/withdraw",
+  generateSwapProof: "/api/prove/swap",
+  health: "/api/health",
+} as const;

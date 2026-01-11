@@ -6,6 +6,8 @@ import Dashboard from "@/src/modules/app/Dashboard";
 import Trade from "@/src/modules/app/Trade";
 import Transfer from "@/src/modules/app/Transfer";
 import Compliance from "@/src/modules/app/Compliance";
+import Deposit from "@/src/modules/app/Deposit";
+import Withdraw from "@/src/modules/app/Withdraw";
 import { FileText } from "lucide-react";
 import * as motion from "motion/react-client";
 
@@ -52,6 +54,8 @@ function AppContent() {
       <AppNavbar />
       <main className="pt-16">
         {activeTab === "dashboard" && <Dashboard />}
+        {activeTab === "deposit" && <Deposit />}
+        {activeTab === "withdraw" && <Withdraw />}
         {activeTab === "trade" && <Trade />}
         {activeTab === "transfer" && <Transfer />}
         {activeTab === "compliance" && <Compliance />}

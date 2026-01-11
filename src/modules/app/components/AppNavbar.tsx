@@ -22,6 +22,8 @@ import HamburgerButton from "./Hamburger";
 
 const tabs: { id: AppTab; label: string }[] = [
   { id: "dashboard", label: "DASHBOARD" },
+  { id: "deposit", label: "DEPOSIT" },
+  { id: "withdraw", label: "WITHDRAW" },
   { id: "trade", label: "TRADE" },
   { id: "transfer", label: "TRANSFER" },
   { id: "compliance", label: "COMPLIANCE" },
@@ -117,20 +119,27 @@ export default function AppNavbar() {
           </Link>
 
           {/* Tab Navigation - Hidden on mobile/md */}
-          <div className="hidden lg:flex items-center gap-1">
+          <div className="hidden lg:flex items-center gap-1 bg-zinc-900/50 p-1 rounded-lg border border-zinc-800/50">
             {tabs.map((tab) => (
               <motion.button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className={`px-4 py-2 text-xs font-medium rounded-md transition-all ${
+                className={`relative px-4 py-2 text-xs font-medium rounded-md transition-all duration-200 ${
                   activeTab === tab.id
-                    ? "bg-zinc-800 text-white border border-zinc-700"
-                    : "text-zinc-400 hover:text-white hover:bg-zinc-900"
+                    ? "bg-purple-600 text-white shadow-lg shadow-purple-500/20"
+                    : "text-zinc-500 hover:text-white hover:bg-zinc-800/50"
                 }`}
               >
                 {tab.label}
+                {activeTab === tab.id && (
+                  <motion.div
+                    layoutId="activeTab"
+                    className="absolute inset-0 bg-purple-600 rounded-md -z-10"
+                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                  />
+                )}
               </motion.button>
             ))}
           </div>
